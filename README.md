@@ -28,6 +28,7 @@ export LFS_DISK=/dev/sdb
 export MAKEFLAGS='-j4'
 ```
 LFS_DISK > Write the disk on which the LFS system will be built.
+
 MAKEFLAGS > Enter the number of processor cores to speed up the compilation process.
 The MAKEFLAGS variable can be set to automatically determine the number of cores using the command: 
 ``` bash 
