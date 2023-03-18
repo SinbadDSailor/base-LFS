@@ -4,6 +4,7 @@ export LFS=/mnt/lfs
 export LFS_TGT=x86_64-lfs-linux-gnu
 export LFS_DISK=/dev/sdb
 export MAKEFLAGS='-j4'
+export SYSTEMFLAG="SD"
 
 
 if ! grep -q "$LFS" /proc/mounts; then
@@ -53,33 +54,73 @@ done
 chmod ugo+x pre-chroot.sh
 chmod ugo+x chroot-bash.sh
 chmod ugo+x packageinstall.sh
-chmod ugo+x in-chroot.sh
+chmod ugo+x in-chrootv.sh
 chmod ugo+x in-chroot2.sh
 chmod ugo+x in-chroot3.sh
-chmod ugo+x in-chroot4.sh
-chmod ugo+x in-chroot5.sh
-chmod ugo+x in-chroot6.sh
+chmod ugo+x in-chrootv4.sh
+chmod ugo+x in-chrootv5.sh
+chmod ugo+x in-chrootv6.sh
+chmod ugo+x in-chrootd.sh
+chmod ugo+x in-chrootd4.sh
+chmod ugo+x in-chrootd5.sh
+chmod ugo+x in-chrootd6.sh
 chmod ugo+x quit-chroot.sh
 
 
 # CHAPTER 7, 8, 9 & 10
-sudo ./pre-chroot.sh "$LFS"
 
-for script in "/sources/in-chroot.sh" "/sources/in-chroot2.sh" "/sources/in-chroot3.sh" "/sources/in-chroot4.sh" "/sources/in-chroot5.sh" "/sources/in-chroot6.sh"; do
-    echo "ENTERING $script IN CHROOT ENVIRONMENT"
-    sleep 3
-    sudo chroot "$LFS" /usr/bin/env -i   \
-            HOME=/root                  \
-            TERM="$TERM"                \
-            PS1='(lfs chroot) \u:\w\$ ' \
-            PATH="/bin:/usr/bin:/sbin:/usr/sbin"     \
-            TESTERUID=$UID              \
-            MAKEFLAGS='-j4'             \
-            /bin/bash --login +h -c "$script"
 
-done
+if [ "$SYSTEMFLAG" = "SV" ]; then
 
-sudo ./quit-chroot.sh "$LFS" "$USER" "$(id -gn)"
+    sudo ./pre-chroot.sh "$LFS"
+
+    for script in "/sources/in-chrootv.sh" "/sources/in-chroot2.sh" "/sources/in-chroot3.sh" "/sources/in-chrootv4.sh" \
+                  "/sources/in-chrootv5.sh" "/sources/in-chrootv6.sh"; do
+        echo "ENTERING $script IN CHROOT ENVIRONMENT"
+        sleep 3
+        sudo chroot "$LFS" /usr/bin/env -i   \
+                HOME=/root                  \
+                TERM="$TERM"                \
+                PS1='(lfs chroot) \u:\w\$ ' \
+                PATH="/bin:/usr/bin:/sbin:/usr/sbin"     \
+                TESTERUID=$UID              \
+                MAKEFLAGS='-j4'             \
+                SYSTEMFLAG="$SYSTEMFLAG"    \
+                /bin/bash --login +h -c "$script"
+
+    done
+
+    sudo ./quit-chroot.sh "$LFS" "$USER" "$(id -gn)"
+
+elif [ "$SYSTEMFLAG" = "SD" ]; then
+
+    sudo ./pre-chroot.sh "$LFS"
+
+    for script in "/sources/in-chrootd.sh" "/sources/in-chroot2.sh" "/sources/in-chroot3.sh" "/sources/in-chrootd4.sh" \
+                  "/sources/in-chrootd5.sh" "/sources/in-chrootd6.sh"; do
+        echo "ENTERING $script IN CHROOT ENVIRONMENT"
+        sleep 3
+        sudo chroot "$LFS" /usr/bin/env -i   \
+                HOME=/root                  \
+                TERM="$TERM"                \
+                PS1='(lfs chroot) \u:\w\$ ' \
+                PATH="/bin:/usr/bin:/sbin:/usr/sbin"     \
+                TESTERUID=$UID              \
+                MAKEFLAGS='-j4'             \
+                SYSTEMFLAG="$SYSTEMFLAG"    \
+                /bin/bash --login +h -c "$script"
+
+    done
+
+    sudo ./quit-chroot.sh "$LFS" "$USER" "$(id -gn)"
+
+else
+
+    echo "Invalid entry!"
+    echo "Populate the SYSTEMFLAG variable again."
+
+fi
+
 # CHAPTER 7, 8, 9 & 10
 
 

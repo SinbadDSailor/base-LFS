@@ -38,4 +38,6 @@ cat packages.csv | grep -i "^$PACKAGE;" | grep -i -v "\.patch;" | while read lin
 
     rm -rf $DIRNAME
 
+    sleep 5
+
 done
