@@ -23,13 +23,20 @@ The main script is lfs-main.sh. Mandatory variables are declared in it and scrip
 
 ## Important settings
 
+SYSTEMFLAG > Options are SV (sysvinit) or SD (systemd). Choose an option depending on whether you want to build the system with systemvinit or systemd.
+
+``` bash
+export SYSTEMFLAG="SV"
+```
+
+LFS_DISK > Write the disk on which the LFS system will be built.
+MAKEFLAGS > Enter the number of processor cores to speed up the compilation process.
+
 ``` bash
 export LFS_DISK=/dev/sdb
 export MAKEFLAGS='-j4'
 ```
-LFS_DISK > Write the disk on which the LFS system will be built.
 
-MAKEFLAGS > Enter the number of processor cores to speed up the compilation process.
 The MAKEFLAGS variable can be set to automatically determine the number of cores using the command: 
 ``` bash 
 export MAKEFLAGS="-j $(grep -c ^processor /proc/cpuinfo)"
