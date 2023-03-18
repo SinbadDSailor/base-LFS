@@ -3,11 +3,11 @@
 expect -c "spawn ls"
 
 if expect -c "spawn ls" | grep -q "spawn ls"; then
+    echo "Test completed successfully"
+else
     echo "Error occured"
     echo "Exiting.."
     exit
-else
-    echo "Test completed successfully"
 fi
 
 
